@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Task;
 
 class TaskControler extends Controller
 {
@@ -12,15 +13,8 @@ class TaskControler extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $tasks = Task::all();
+        return response()->json($tasks);
     }
 
     /**
@@ -28,21 +22,18 @@ class TaskControler extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $new_task= Task::create($request->all());
+        return response()->json([
+            'status'=>true,
+            'message'=>"Task Created Successfully",
+            'data'=>$new_task
+        ]);
     }
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
     {
         //
     }
@@ -61,5 +52,14 @@ class TaskControler extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function employeeTasks(Request $request){
+        
+        $employeeId= request()->get('id');
+        
+        $employee_tasks= Task::where('employee_id',$employeeId)->get();
+        
+        return response()->json($employee_tasks);
     }
 }
