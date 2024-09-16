@@ -44,4 +44,25 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+
+    public function tasks(){
+
+        return $this->hasMany(Task::class, 'employee_id');
+    }
+
+    public function managedTasks(){
+
+        return $this->hasMany(Task::class, 'manager_id');
+    }
+
+    public function manager()
+    {
+        return $this->belongsTo(User::class, 'manager_id');
+    }
+
+    public function employees()
+    {
+        return $this->hasMany(User::class, 'manager_id');
+    }
 }
