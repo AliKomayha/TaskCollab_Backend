@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Hash;
 
 class UserController extends Controller
 {
@@ -56,5 +57,30 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function login(Request $request) {
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required',
+        ]);
+    
+        $user = User::where('username', $request->username)->first();
+    
+        if ($user && Hash::check($request->password, $user->password)) {
+            // Authentication passed
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'id' => $user->id,
+                    'username' => $user->username,
+                    'name' => $user->name,
+                    'role' => $user->role,
+                ],
+            ]);
+        } else {
+            // Authentication failed
+            return response()->json(['success' => false, 'message' => 'Invalid credentials']);
+        }
     }
 }
